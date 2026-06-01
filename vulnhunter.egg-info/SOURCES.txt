@@ -1,0 +1,10 @@
+LICENSE
+README.md
+setup.py
+vulnhunter/__init__.py
+vulnhunter/main.py
+vulnhunter.egg-info/PKG-INFO
+vulnhunter.egg-info/SOURCES.txt
+vulnhunter.egg-info/dependency_links.txt
+vulnhunter.egg-info/entry_points.txt
+vulnhunter.egg-info/top_level.txt
