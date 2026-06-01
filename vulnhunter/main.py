@@ -40,8 +40,8 @@ def main():
 
 Vuln.Hunter v1.0
 """
-
 print(banner)
+
     target = input("Enter target URL (e.g., https://example.com): ").strip()
     print(f"Scanning {target} ...")
     results = test_endpoint(target)
