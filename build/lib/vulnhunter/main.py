@@ -20,6 +20,7 @@ def test_endpoint(url):
     findings = []
     for endpoint in endpoints:
         full_url = urljoin(url, endpoint)
+        print(f"[*] Testing: {full_url}")
         for vuln_type, tests in payloads.items():
             for test in tests:
                 try:
@@ -32,21 +33,23 @@ def test_endpoint(url):
     return findings
 
 def main():
-
-        banner = r"""
+    
+    banner = r"""
 ╦  ╦ ╦ ╦
 ╚╗╔╝ ╠═╣
  ╚╝  ╩ ╩
 
 Vuln.Hunter v1.0
 """
-print(banner)
 
+    print(banner)
     target = input("Enter target URL (e.g., https://example.com): ").strip()
     print(f"[V.H] Target: {target}")
-    print("[V.H] Testing endpoints...")
-    print("[V.H] Scan started...")
+    print("[V.H] testing endpoints...")
+    print("[V.H] Scan Started...")
     results = test_endpoint(target)
+    print("\n[+] Scan Complete")
+    print(f"[+] Findings: {len(results)}")
     if results:
         print("Potential vulnerabilities found:")
         for url, vuln, payload in results:

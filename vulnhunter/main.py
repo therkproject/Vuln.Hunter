@@ -1,5 +1,9 @@
 import requests
+import time
 from urllib.parse import urljoin
+from urllib.parse import urlparse
+from colorama import Fore, Style
+from colorama import init
 
 # Common test payloads for SQLi and XSS
 payloads = {
@@ -20,6 +24,7 @@ def test_endpoint(url):
     findings = []
     for endpoint in endpoints:
         full_url = urljoin(url, endpoint)
+        print(f"[*] Testing: {full_url}")
         for vuln_type, tests in payloads.items():
             for test in tests:
                 try:
@@ -32,25 +37,62 @@ def test_endpoint(url):
     return findings
 
 def main():
+    init()
     
     banner = r"""
-╦  ╦ ╦ ╦
-╚╗╔╝ ╠═╣
- ╚╝  ╩ ╩
+██╗   ██╗██╗   ██╗██╗     ███╗   ██╗
+██║   ██║██║   ██║██║     ████╗  ██║
+██║   ██║██║   ██║██║     ██╔██╗ ██║
+╚██╗ ██╔╝██║   ██║██║     ██║╚██╗██║
+ ╚████╔╝ ╚██████╔╝███████╗██║ ╚████║
+  ╚═══╝   ╚═════╝ ╚══════╝╚═╝  ╚═══╝
 
-Vuln.Hunter v1.0
+██╗  ██╗██╗   ██╗███╗   ██╗████████╗███████╗██████╗
+██║  ██║██║   ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
+███████║██║   ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝
+██╔══██║██║   ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗
+██║  ██║╚██████╔╝██║ ╚████║   ██║   ███████╗██║  ██║
+╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+
+                     2026
+
+        Advanced Web Vulnerability Scanner
+
+Author  : The RK Project
+Version : 1.1
 """
 
-    print(banner)
+    print(Fore.CYAN + banner + Style.RESET_ALL)
     target = input("Enter target URL (e.g., https://example.com): ").strip()
+    parsed = urlparse(target)
+
+    if not parsed.scheme or not parsed.netloc:
+        print(Fore.MAGENTA + "[!] Invalid URL!" + Style.RESET_ALL)
+        return
+    
     print(f"[V.H] Target: {target}")
     print("[V.H] testing endpoints...")
     print("[V.H] Scan Started...")
+    start_time = time.time()
     results = test_endpoint(target)
+    end_time = time.time()
+    with open("report.txt","w", encoding="utf-8")as report:
+        report.write(f"Target: {target}\n")
+        report.write(f"Findings: {len(results)}\n\n")
+
+        for url, vuln, payload in results:
+            report.write(
+                f"{vuln.upper()} at {url} with payload: {payload}\n"
+                )
+            
+    print(Fore.GREEN + "\n[+] Scan Complete" + Style.RESET_ALL)
+    print(f"[+] Findings: {len(results)}")
+    print(f"[+] Report saved to report.txt")
+    print(f"[+] Time Taken: {round(end_time - start_time, 2)} seconds")
     if results:
         print("Potential vulnerabilities found:")
         for url, vuln, payload in results:
-            print(f"[!] {vuln.upper()} at {url} with payload: {payload}")
+            print(Fore.RED + f"[!] {vuln.upper()} at {url} with payload: {payload}" + Style.RESET_ALL)
     else:
         print("No obvious vulnerabilities detected.")
 
