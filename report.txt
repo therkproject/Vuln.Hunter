@@ -1,7 +1,0 @@
-Target: https://ad.nl
-Findings: 4
-
-SQL_INJECTION at https://ad.nl/search with payload: '
-SQL_INJECTION at https://ad.nl/product?id=1 with payload: '
-SQL_INJECTION at https://ad.nl/comment with payload: '
-SQL_INJECTION at https://ad.nl/profile with payload: '

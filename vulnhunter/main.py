@@ -1,5 +1,6 @@
 import requests
 import time
+import sys
 from urllib.parse import urljoin
 from urllib.parse import urlparse
 from colorama import Fore, Style
@@ -24,7 +25,7 @@ def test_endpoint(url):
     findings = []
     for endpoint in endpoints:
         full_url = urljoin(url, endpoint)
-        print(f"[*] Testing: {full_url}")
+        print(Fore.YELLOW + f"[*] Testing: {full_url}" + Style.RESET_ALL)
         for vuln_type, tests in payloads.items():
             for test in tests:
                 try:
@@ -38,6 +39,22 @@ def test_endpoint(url):
 
 def main():
     init()
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--version":
+        print("VulnHunter 2026 v1.2")
+        return
+    if len(sys.argv) > 1 and sys.argv[1] == "--help":
+        print("""
+VulnHunter 2026
+
+Usage:
+ vulnhunter
+
+ Options:
+ --help   contact on github.com/therkproject
+ --version  Show version information
+ """)
+        return
     
     banner = r"""
 ██╗   ██╗██╗   ██╗██╗     ███╗   ██╗
@@ -59,11 +76,15 @@ def main():
         Advanced Web Vulnerability Scanner
 
 Author  : The RK Project
-Version : 1.1
+Version : v1.2
 """
 
     print(Fore.CYAN + banner + Style.RESET_ALL)
-    target = input("Enter target URL (e.g., https://example.com): ").strip()
+    if len(sys.argv) > 1:
+        target = sys.argv[1]
+        
+    else:
+        target = input("Enter Target URL (e.g.. https://example.com): ").strip()
     parsed = urlparse(target)
 
     if not parsed.scheme or not parsed.netloc:
